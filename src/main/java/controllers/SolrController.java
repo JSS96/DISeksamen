@@ -1,20 +1,15 @@
 package controllers;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import utils.Config;
 
-
-
-public class SolrController {
+public final class SolrController {
 
   private static HttpSolrClient connection;
 
@@ -47,29 +42,35 @@ public class SolrController {
   }
 
   /**
-   * Do a query in the database
+   * Do a query in SolR
    *
    * @return a ResultSet or Null if Empty
    */
-  public void query(String sql) {
+  public static SolrDocumentList search(String field, String value) {
 
+    if(connection == null)
+      connection = getConnection();
+
+    // Search in Solr base on Field and Value
     SolrQuery query = new SolrQuery();
-    query.set("q", "price:599.99");
+    query.set("q", field + ":" + value);
+
+    // Create an empty document list
+    SolrDocumentList docList = new SolrDocumentList();
 
     try {
+      // Search in Solr
       QueryResponse response = connection.query(query);
 
-      SolrDocumentList docList = response.getResults();
-      assertEquals(docList.getNumFound(), 1);
+      // Get the results
+      docList = response.getResults();
 
-      for (SolrDocument doc : docList) {
-        assertEquals(doc.getFieldValue("id"), "123456");
-        assertEquals(doc.getFieldValue("price"), (Double) 599.99);
-      }
     } catch (SolrServerException e) {
       System.out.println(e.getMessage());
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    return docList;
   }
 }
