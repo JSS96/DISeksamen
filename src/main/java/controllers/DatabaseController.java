@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import utils.Config;
 
 public class DatabaseController {
@@ -31,6 +32,7 @@ public class DatabaseController {
               + "/"
               + Config.getDatabaseName()
               + "?serverTimezone=CET";
+
       String user = Config.getDatabaseUsername();
       String password = Config.getDatabasePassword();
 
@@ -54,9 +56,9 @@ public class DatabaseController {
    */
   public ResultSet query(String sql) {
 
-    if (connection == null) {
+    if (connection == null)
       connection = getConnection();
-    }
+
 
     ResultSet rs = null;
 
@@ -70,5 +72,34 @@ public class DatabaseController {
     }
 
     return rs;
+  }
+
+  public int insert(String sql) {
+
+    // Set key to 0 as a start
+    int result = 0;
+
+    // Check that we have connection
+    if (connection == null)
+      connection = getConnection();
+
+    try {
+      // Build the statement up in a safe way
+      PreparedStatement statement =
+          connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+      // Execute query
+      result = statement.executeUpdate();
+
+      // Get our key back in order to update the user
+      ResultSet generatedKeys = statement.getGeneratedKeys();
+      if (generatedKeys.next()) {
+        return generatedKeys.getInt(1);
+      }
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+    return result;
   }
 }

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Product;
+import utils.Log;
 
 public class ProductController {
 
@@ -29,10 +30,44 @@ public class ProductController {
         product =
             new Product(
                 rs.getInt("id"),
-                rs.getString("name"),
+                rs.getString("product_name"),
                 rs.getString("sku"),
                 rs.getFloat("price"),
-                rs.getString("description"));
+                rs.getString("description"),
+                rs.getInt("stock"));
+
+        return product;
+      } else {
+        System.out.println("No user found");
+      }
+    } catch (SQLException ex) {
+      System.out.println(ex.getMessage());
+    }
+
+    return product;
+  }
+
+  public static Product getProductBySku(String sku) {
+
+    if (dbCon == null) {
+      dbCon = new DatabaseController();
+    }
+
+    String sql = "SELECT * FROM product where sku='" + sku + "'";
+
+    ResultSet rs = dbCon.query(sql);
+    Product product = null;
+
+    try {
+      if (rs.next()) {
+        product =
+            new Product(
+                rs.getInt("id"),
+                rs.getString("product_name"),
+                rs.getString("sku"),
+                rs.getFloat("price"),
+                rs.getString("description"),
+                rs.getInt("stock"));
 
         return product;
       } else {
@@ -57,8 +92,7 @@ public class ProductController {
     }
 
     // TODO: Use caching layer.
-
-    String sql = "SELECT * FROM produrctr";
+    String sql = "SELECT * FROM product";
 
     ResultSet rs = dbCon.query(sql);
     ArrayList<Product> products = new ArrayList<Product>();
@@ -71,7 +105,8 @@ public class ProductController {
                 rs.getString("name"),
                 rs.getString("sku"),
                 rs.getFloat("price"),
-                rs.getString("description"));
+                rs.getString("description"),
+                rs.getInt("stock"));
 
         products.add(product);
       }
@@ -80,5 +115,46 @@ public class ProductController {
     }
 
     return products;
+  }
+
+  public static Product createProduct(Product product) {
+
+    // Write in log that we've reach this step
+    Log.writeLog(ProductController.class.getName(), product, "Actually creating a product in DB", 0);
+
+    // Set creation time for product.
+    product.setCreatedTime(System.currentTimeMillis() / 1000L);
+
+    // Check for DB Connection
+    if (dbCon == null) {
+      dbCon = new DatabaseController();
+    }
+
+    // Insert the product in the DB
+    int productID = dbCon.insert(
+        "INSERT INTO product(product_name, sku, price, description, stock, created_at) VALUES('"
+            + product.getName()
+            + "', '"
+            + product.getSku()
+            + "', '"
+            + product.getPrice()
+            + "', '"
+            + product.getDescription()
+            + "', "
+            + product.getStock()
+            + "', "
+            + product.getCreatedTime()
+            + ")");
+
+    if (productID != 0) {
+      //Update the productid of the product before returning
+      product.setId(productID);
+    } else{
+      // Return null if product has not been inserted into database
+      return null;
+    }
+
+    // Return product
+    return product;
   }
 }

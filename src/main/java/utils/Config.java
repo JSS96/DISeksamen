@@ -10,13 +10,13 @@ import java.io.InputStreamReader;
 public final class Config {
 
   private static String DATABASE_HOST;
-  private static Integer DATABASE_PORT;
+  private static int DATABASE_PORT;
   private static String DATABASE_USERNAME;
   private static String DATABASE_PASSWORD;
   private static String DATABASE_NAME;
   private static boolean ENCRYPTION;
   private static String SOLR_HOST;
-  private static String SOLR_PORT;
+  private static int SOLR_PORT;
   private static String SOLR_PATH;
   private static String SOLR_CORE;
   private static long PRODUCT_TTL;
@@ -29,7 +29,7 @@ public final class Config {
     return DATABASE_HOST;
   }
 
-  public static Integer getDatabasePort() {
+  public static int getDatabasePort() {
     return DATABASE_PORT;
   }
 
@@ -53,7 +53,7 @@ public final class Config {
     return SOLR_HOST;
   }
 
-  public static String getSolrPort() {
+  public static int getSolrPort() {
     return SOLR_PORT;
   }
 
@@ -65,20 +65,21 @@ public final class Config {
     return SOLR_CORE;
   }
 
-  public void initializeConfig() throws IOException {
+  public static void initializeConfig() throws IOException {
 
     // Init variables to parse JSON
-    JsonObject json = new JsonObject();
+    JsonObject json;
     JsonParser parser = new JsonParser();
 
     // Read File and store input
-    InputStream input = this.getClass().getResourceAsStream("/config.json");
+    InputStream input = Config.class.getResourceAsStream("/config.json");
     BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
     // Go through the lines one by one
     StringBuffer stringBuffer = new StringBuffer();
-    String str = "";
+    String str;
 
+    // Read file one line at a time
     while ((str = reader.readLine()) != null) {
       stringBuffer.append(str);
     }
@@ -94,9 +95,9 @@ public final class Config {
     DATABASE_NAME = json.get("DATABASE_NAME").toString().replace("\"", "");
     ENCRYPTION = json.get("ENCRYPTION").getAsBoolean();
     SOLR_HOST = json.get("SOLR_HOST").toString().replace("\"", "");
-    SOLR_PORT = json.get("SOLR_PORT").toString().replace("\"", "");
+    SOLR_PORT = Integer.parseInt(json.get("SOLR_PORT").toString().replace("\"", ""));
     SOLR_PATH = json.get("SOLR_PATH").toString().replace("\"", "");
     SOLR_CORE = json.get("SOLR_CORE").toString().replace("\"", "");
-    PRODUCT_TTL = json.get("ENCRYPTION").getAsLong();
+    PRODUCT_TTL = json.get("PRODUCT_TTL").getAsLong();
   }
 }

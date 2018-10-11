@@ -4,5 +4,10 @@
   "DATABASE_USERNAME" : "root",
   "DATABASE_PASSWORD" : "password",
   "DATABASE_NAME" : "cbsexam",
-  "ENCRYPTION" : true
+  "ENCRYPTION" : true,
+  "SOLR_HOST" : "localhost",
+  "SOLR_PORT" : 8983,
+  "SOLR_PATH" : "solr",
+  "SOLR_CORE" : "cbsexam",
+  "PRODUCT_TTL" : 3600
 }
