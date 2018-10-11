@@ -10,64 +10,84 @@ import java.io.InputStreamReader;
 
 public final class Config {
 
-    private static String DATABASE_HOST;
-    private static Integer DATABASE_PORT;
-    private static String DATABASE_USERNAME;
-    private static String DATABASE_PASSWORD;
-    private static String DATABASE_NAME;
-    private static boolean ENCRYPTION;
+  private static String DATABASE_HOST;
+  private static Integer DATABASE_PORT;
+  private static String DATABASE_USERNAME;
+  private static String DATABASE_PASSWORD;
+  private static String DATABASE_NAME;
+  private static boolean ENCRYPTION;
+  private static String SOLR_HOST;
+  private static String SOLR_PORT;
+  private static String SOLR_PATH;
+  private static String SOLR_CORE;
 
-    public void initializeConfig() throws IOException {
+  public static String getDatabaseHost() {
+    return DATABASE_HOST;
+  }
 
-        // Init variables to parse JSON
-        JsonObject json = new JsonObject();
-        JsonParser parser = new JsonParser();
+  public static Integer getDatabasePort() {
+    return DATABASE_PORT;
+  }
 
-        // Read File and store input
-        InputStream input = this.getClass().getResourceAsStream("/config.json");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+  public static String getDatabaseUsername() {
+    return DATABASE_USERNAME;
+  }
 
-        // Go through the lines one by one
-        StringBuffer stringBuffer = new StringBuffer();
-        String str = "";
+  public static String getDatabasePassword() {
+    return DATABASE_PASSWORD;
+  }
 
-        while((str = reader.readLine()) != null) {
-            stringBuffer.append(str);
-        }
+  public static String getDatabaseName() {
+    return DATABASE_NAME;
+  }
 
-        // Konverterer json til variabler ved at typecaste til JsonObject
-        json = (JsonObject) parser.parse(stringBuffer.toString());
+  public static Boolean getEncryption() {
+    return ENCRYPTION;
+  }
 
-        // Hiv teksten ud og sæt klassens variable til senere brug
-        DATABASE_HOST = json.get("DATABASE_HOST").toString().replace("\"", "");
-        DATABASE_PORT = Integer.parseInt(json.get("DATABASE_PORT").toString().replace("\"", ""));
-        DATABASE_USERNAME = json.get("DATABASE_USERNAME").toString().replace("\"", "");
-        DATABASE_PASSWORD = json.get("DATABASE_PASSWORD").toString().replace("\"", "");
-        DATABASE_NAME = json.get("DATABASE_NAME").toString().replace("\"", "");
-        ENCRYPTION = json.get("ENCRYPTION").getAsBoolean();
+  public static String getSolrHost() {
+    return SOLR_HOST;
+  }
+
+  public static String getSolrPort() {
+    return SOLR_PORT;
+  }
+
+  public static String getSolrPath() {
+    return SOLR_PATH;
+  }
+
+  public static String getSolrCore() {
+    return SOLR_CORE;
+  }
+
+  public void initializeConfig() throws IOException {
+
+    // Init variables to parse JSON
+    JsonObject json = new JsonObject();
+    JsonParser parser = new JsonParser();
+
+    // Read File and store input
+    InputStream input = this.getClass().getResourceAsStream("/config.json");
+    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+
+    // Go through the lines one by one
+    StringBuffer stringBuffer = new StringBuffer();
+    String str = "";
+
+    while ((str = reader.readLine()) != null) {
+      stringBuffer.append(str);
     }
 
-    public static String getDatabaseHost() {
-        return DATABASE_HOST;
-    }
+    // Konverterer json til variabler ved at typecaste til JsonObject
+    json = (JsonObject) parser.parse(stringBuffer.toString());
 
-    public static Integer getDatabasePort() {
-        return DATABASE_PORT;
-    }
-
-    public static String getDatabaseUsername() {
-        return DATABASE_USERNAME;
-    }
-
-    public static String getDatabasePassword() {
-        return DATABASE_PASSWORD;
-    }
-
-    public static String getDatabaseName() {
-        return DATABASE_NAME;
-    }
-
-    public static Boolean getEncryption() {
-        return ENCRYPTION;
-    }
+    // Hiv teksten ud og sæt klassens variable til senere brug
+    DATABASE_HOST = json.get("DATABASE_HOST").toString().replace("\"", "");
+    DATABASE_PORT = Integer.parseInt(json.get("DATABASE_PORT").toString().replace("\"", ""));
+    DATABASE_USERNAME = json.get("DATABASE_USERNAME").toString().replace("\"", "");
+    DATABASE_PASSWORD = json.get("DATABASE_PASSWORD").toString().replace("\"", "");
+    DATABASE_NAME = json.get("DATABASE_NAME").toString().replace("\"", "");
+    ENCRYPTION = json.get("ENCRYPTION").getAsBoolean();
+  }
 }

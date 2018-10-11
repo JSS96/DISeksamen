@@ -1,6 +1,5 @@
 package com.cbsexam;
 
-
 import com.google.gson.Gson;
 import controllers.ProductController;
 import model.Product;
@@ -15,46 +14,32 @@ import java.util.ArrayList;
 @Path("product")
 public class ProductEndpoints {
 
-    /**
-     *
-     * @param idProduct
-     * @return Responses
-     */
-    @GET
-    @Path("/{idProduct}")
-    public Response getProduct(@PathParam("idProduct") int idProduct) {
+  /**
+   * @param idProduct
+   * @return Responses
+   */
+  @GET
+  @Path("/{idProduct}")
+  public Response getProduct(@PathParam("idProduct") int idProduct) {
 
-        Product product = ProductController.getProduct(idProduct);
+    Product product = ProductController.getProduct(idProduct);
 
-        //TODO: Add Encryption to JSON
-        String json = new Gson().toJson(product);
+    // TODO: Add Encryption to JSON
+    String json = new Gson().toJson(product);
 
-        return Response
-                .status(200)
-                .type(MediaType.TEXT_PLAIN_TYPE)
-                .entity(json)
-                .build();
+    return Response.status(200).type(MediaType.TEXT_PLAIN_TYPE).entity(json).build();
+  }
 
-    }
+  /** @return Responses */
+  @GET
+  @Path("/")
+  public Response getProducts() {
 
-    /**
-     *
-     * @return Responses
-     */
-    @GET
-    @Path("/")
-    public Response getProducts() {
+    ArrayList<Product> products = ProductController.getProducts();
 
-        ArrayList<Product> products = ProductController.getProducts();
+    // TODO: Add Encryption to JSON
+    String json = new Gson().toJson(products);
 
-        //TODO: Add Encryption to JSON
-        String json = new Gson().toJson(products);
-
-        return Response
-                .status(200)
-                .type(MediaType.TEXT_PLAIN_TYPE)
-                .entity(json)
-                .build();
-
-    }
+    return Response.status(200).type(MediaType.TEXT_PLAIN_TYPE).entity(json).build();
+  }
 }
