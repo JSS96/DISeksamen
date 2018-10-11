@@ -1,8 +1,8 @@
 package utils;
 
+import java.io.IOException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.IOException;
 
 public class Context implements ServletContextListener {
 

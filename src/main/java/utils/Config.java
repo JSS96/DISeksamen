@@ -2,7 +2,6 @@ package utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +19,11 @@ public final class Config {
   private static String SOLR_PORT;
   private static String SOLR_PATH;
   private static String SOLR_CORE;
+  private static long PRODUCT_TTL;
+
+  public static long getProductTtl() {
+    return PRODUCT_TTL;
+  }
 
   public static String getDatabaseHost() {
     return DATABASE_HOST;
@@ -89,5 +93,10 @@ public final class Config {
     DATABASE_PASSWORD = json.get("DATABASE_PASSWORD").toString().replace("\"", "");
     DATABASE_NAME = json.get("DATABASE_NAME").toString().replace("\"", "");
     ENCRYPTION = json.get("ENCRYPTION").getAsBoolean();
+    SOLR_HOST = json.get("SOLR_HOST").toString().replace("\"", "");
+    SOLR_PORT = json.get("SOLR_PORT").toString().replace("\"", "");
+    SOLR_PATH = json.get("SOLR_PATH").toString().replace("\"", "");
+    SOLR_CORE = json.get("SOLR_CORE").toString().replace("\"", "");
+    PRODUCT_TTL = json.get("ENCRYPTION").getAsLong();
   }
 }

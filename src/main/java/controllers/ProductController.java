@@ -1,10 +1,9 @@
 package controllers;
 
-import model.Product;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Product;
 
 public class ProductController {
 
@@ -56,6 +55,8 @@ public class ProductController {
     if (dbCon == null) {
       dbCon = new DatabaseController();
     }
+
+    // TODO: Use caching layer.
 
     String sql = "SELECT * FROM produrctr";
 

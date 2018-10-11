@@ -1,10 +1,9 @@
 package controllers;
 
-import model.User;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.User;
 
 public class UserController {
 
