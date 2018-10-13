@@ -56,21 +56,28 @@ public class DatabaseController {
    */
   public ResultSet query(String sql) {
 
+    // Check if we have a connection
     if (connection == null)
       connection = getConnection();
 
 
+    // We set the resultset as empty.
     ResultSet rs = null;
 
     try {
+      // Build the statement as a prepared statement
       PreparedStatement stmt = connection.prepareStatement(sql);
+
+      // Actually fire the query to the DB
       rs = stmt.executeQuery();
 
+      // Return the results
       return rs;
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
 
+    // Return the resultset which at this point will be null
     return rs;
   }
 
@@ -100,6 +107,7 @@ public class DatabaseController {
       System.out.println(e.getMessage());
     }
 
+    // Return the resultset which at this point will be null
     return result;
   }
 }

@@ -16,16 +16,20 @@ public class ProductController {
 
   public static Product getProduct(int id) {
 
+    // check for connection
     if (dbCon == null) {
       dbCon = new DatabaseController();
     }
 
+    // Build the SQL query for the DB
     String sql = "SELECT * FROM product where id=" + id;
 
+    // Run the query in the DB and make an empty object to return
     ResultSet rs = dbCon.query(sql);
     Product product = null;
 
     try {
+      // Get first row and create the object and return it
       if (rs.next()) {
         product =
             new Product(
@@ -36,6 +40,7 @@ public class ProductController {
                 rs.getString("description"),
                 rs.getInt("stock"));
 
+        // Return the product
         return product;
       } else {
         System.out.println("No user found");
@@ -44,6 +49,7 @@ public class ProductController {
       System.out.println(ex.getMessage());
     }
 
+    // Return empty object
     return product;
   }
 

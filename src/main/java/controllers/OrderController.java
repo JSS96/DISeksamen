@@ -19,12 +19,15 @@ public class OrderController {
 
   public static Order getOrder(int id) {
 
+    // check for connection
     if (dbCon == null) {
       dbCon = new DatabaseController();
     }
 
+    // Build SQL string to query
     String sql = "SELECT * FROM orders where id=" + id;
 
+    // Do the query in the database and create an empty object for the results
     ResultSet rs = dbCon.query(sql);
     Order order = null;
 
@@ -37,6 +40,7 @@ public class OrderController {
         Address billingAddress = AddressController.getAddress(rs.getInt("billing_address_id"));
         Address shippingAddress = AddressController.getAddress(rs.getInt("shipping_address_id"));
 
+        // Create an object instance of order from the database dataa
         order =
             new Order(
                 rs.getInt("id"),
@@ -48,6 +52,7 @@ public class OrderController {
                 rs.getLong("created_at"),
                 rs.getLong("updated_at"));
 
+        // Returns the build order
         return order;
       } else {
         System.out.println("No order found");
@@ -56,6 +61,7 @@ public class OrderController {
       System.out.println(ex.getMessage());
     }
 
+    // Returns null
     return order;
   }
 
@@ -84,6 +90,7 @@ public class OrderController {
         Address billingAddress = AddressController.getAddress(rs.getInt("billing_address_id"));
         Address shippingAddress = AddressController.getAddress(rs.getInt("shipping_address_id"));
 
+        // Create an order from the database data
         Order order =
             new Order(
                 rs.getInt("id"),
@@ -95,6 +102,7 @@ public class OrderController {
                 rs.getLong("created_at"),
                 rs.getLong("updated_at"));
 
+        // Add order to our list
         orders.add(order);
 
       }
@@ -102,6 +110,7 @@ public class OrderController {
       System.out.println(ex.getMessage());
     }
 
+    // return the orders
     return orders;
   }
 

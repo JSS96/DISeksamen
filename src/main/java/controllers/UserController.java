@@ -16,16 +16,20 @@ public class UserController {
 
   public static User getUser(int id) {
 
+    // Check for connection
     if (dbCon == null) {
       dbCon = new DatabaseController();
     }
 
+    // Build the query for DB
     String sql = "SELECT * FROM user where id=" + id;
 
+    // Actually do the query
     ResultSet rs = dbCon.query(sql);
     User user = null;
 
     try {
+      // Get first object, since we only have one
       if (rs.next()) {
         user =
             new User(
@@ -35,6 +39,7 @@ public class UserController {
                 rs.getString("password"),
                 rs.getString("email"));
 
+        // return the create object
         return user;
       } else {
         System.out.println("No user found");
@@ -43,6 +48,7 @@ public class UserController {
       System.out.println(ex.getMessage());
     }
 
+    // Return null
     return user;
   }
 
@@ -53,16 +59,20 @@ public class UserController {
    */
   public static ArrayList<User> getUsers() {
 
+    // Check for DB connection
     if (dbCon == null) {
       dbCon = new DatabaseController();
     }
 
+    // Build SQL
     String sql = "SELECT * FROM user";
 
+    // Do the query and initialyze an empty list for use if we don't get results
     ResultSet rs = dbCon.query(sql);
     ArrayList<User> users = new ArrayList<User>();
 
     try {
+      // Loop through DB Data
       while (rs.next()) {
         User user =
             new User(
@@ -72,12 +82,14 @@ public class UserController {
                 rs.getString("password"),
                 rs.getString("email"));
 
+        // Add element to list
         users.add(user);
       }
     } catch (SQLException ex) {
       System.out.println(ex.getMessage());
     }
 
+    // Return the list of users
     return users;
   }
 

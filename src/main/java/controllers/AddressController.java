@@ -15,16 +15,20 @@ public class AddressController {
 
   public static Address getAddress(int id) {
 
+    // Check for DB Connection
     if (dbCon == null) {
       dbCon = new DatabaseController();
     }
 
+    // Our SQL string
     String sql = "SELECT * FROM address where id=" + id;
 
+    // Do the query and set the initial value to null
     ResultSet rs = dbCon.query(sql);
     Address address = null;
 
     try {
+      // Get the first row and build an address object
       if (rs.next()) {
         address =
             new Address(
@@ -35,6 +39,7 @@ public class AddressController {
                 rs.getString("zipcode")
                 );
 
+        // Return our newly added object
         return address;
       } else {
         System.out.println("No address found");
@@ -43,6 +48,7 @@ public class AddressController {
       System.out.println(ex.getMessage());
     }
 
+    // Returns null if we can't find anything.
     return address;
   }
 
@@ -76,7 +82,7 @@ public class AddressController {
       return null;
     }
 
-    // Return product
+    // Return product, will be null at this point
     return address;
   }
   
