@@ -11,6 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import model.User;
+import utils.Encryption;
 import utils.Log;
 
 @Path("user")
@@ -27,9 +28,11 @@ public class UserEndpoints {
     // Use the ID to get the user from the controller.
     User user = UserController.getUser(idUser);
 
-    // TODO: Add Encryption to JSON
+    // TODO: Add Encryption to JSON Fixed
     // Convert the user object to json in order to return the object
     String json = new Gson().toJson(user);
+
+    json = Encryption.encryptDecryptXOR(json);
 
     // Return the user with the status code 200
     // TODO: What should happen if something breaks down?
@@ -47,9 +50,11 @@ public class UserEndpoints {
     // Get a list of users
     ArrayList<User> users = UserController.getUsers();
 
-    // TODO: Add Encryption to JSON
+    // TODO: Add Encryption to JSON Fixed
     // Transfer users to json in order to return it to the user
     String json = new Gson().toJson(users);
+
+    json = Encryption.encryptDecryptXOR(json);
 
     // Return the users with the status code 200
     return Response.status(200).type(MediaType.APPLICATION_JSON).entity(json).build();
