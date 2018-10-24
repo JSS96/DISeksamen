@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.User;
+import utils.Hashing;
 import utils.Log;
 
 public class UserController {
@@ -107,14 +108,18 @@ public class UserController {
     }
 
     // Insert the user in the DB
-    // TODO: Hash the user password before saving it.
+    // TODO: Hash the user password before saving it. Fixed
+
+    // Opretter et objekt af H
+    Hashing H = new Hashing();
+
     int userID = dbCon.insert(
         "INSERT INTO user(first_name, last_name, password, email, created_at) VALUES('"
             + user.getFirstname()
             + "', '"
             + user.getLastname()
             + "', '"
-            + user.getPassword()
+            + H.md5WithSalt(user.getPassword())
             + "', '"
             + user.getEmail()
             + "', "

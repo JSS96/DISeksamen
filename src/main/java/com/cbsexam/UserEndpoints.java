@@ -54,7 +54,7 @@ public class UserEndpoints {
     // Transfer users to json in order to return it to the user
     String json = new Gson().toJson(users);
 
-    json = Encryption.encryptDecryptXOR(json);
+//    json = Encryption.encryptDecryptXOR(json);
 
     // Return the users with the status code 200
     return Response.status(200).type(MediaType.APPLICATION_JSON).entity(json).build();

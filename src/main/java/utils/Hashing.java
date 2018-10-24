@@ -7,7 +7,20 @@ import org.bouncycastle.util.encoders.Hex;
 
 public final class Hashing {
 
-  // TODO: You should add a salt and make this secure
+  // TODO: You should add a salt and make this secure Fixed
+  private String salt;
+
+  public void setSalt(String salt){
+    this.salt="jbashf";
+  }
+
+  public String md5WithSalt(String string){
+
+    string = this.salt+ string;
+    
+    return md5(string);
+  }
+
   public static String md5(String rawString) {
     try {
 
