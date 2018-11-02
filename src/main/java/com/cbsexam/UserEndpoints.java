@@ -1,5 +1,6 @@
 package com.cbsexam;
 
+import cache.UserCache;
 import com.google.gson.Gson;
 import controllers.UserController;
 
@@ -14,6 +15,8 @@ import utils.Log;
 
 @Path("user")
 public class UserEndpoints {
+
+    UserCache userCache = new UserCache();
 
     /**
      * @param idUser
@@ -48,7 +51,7 @@ public class UserEndpoints {
         Log.writeLog(this.getClass().getName(), this, "Get all users", 0);
 
         // Get a list of users
-        ArrayList<User> users = UserController.getUsers();
+        ArrayList<User> users = userCache.getUsers(true);
 
         // TODO: Add Encryption to JSON Fixed
         // Transfer users to json in order to return it to the user
@@ -89,10 +92,23 @@ public class UserEndpoints {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response loginUser(String body) {
 
-        User updateUser = new Gson().fromJson(body, User.class);
+        User loginUser1 = new Gson().fromJson(body, User.class);
 
-        // Return a response with status 200 and JSON as type
-        return Response.status(400).entity("Endpoint not implemented yet").build();
+        User loginUser = UserController.login(loginUser1);
+
+        String json = new Gson().toJson(loginUser);
+
+
+
+        if (loginUser != null) {
+            // Return a response with status 200 and JSON as type
+
+            return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
+
+        } else {
+            return Response.status(400).entity("Try again, it seems that username and password dosent match").build();
+        }
+
     }
 
     // TODO: Make the system able to delete users Fixed (skriv documneation samt i usercontroller)

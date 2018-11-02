@@ -165,4 +165,37 @@ public class UserController {
 
         return user;
     }
+
+    public static User login(User user) {
+
+        String sql = "SELECT * FROM user where email= \'" + user.getEmail() + "\' AND password = \'" + user.getPassword() + "\'";
+
+        Log.writeLog(UserController.class.getName(), user, "Login ", 0);
+
+        Hashing H = new Hashing();
+
+        String createtoken = user.getCreatedTime() + user.getEmail();
+
+
+        if (dbCon == null) {
+            dbCon = new DatabaseController();
+        }
+
+        ResultSet rs = dbCon.query(sql);
+
+        try {
+            while (rs.next()) {
+                user = new User(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("password"),
+                        rs.getString("email"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return user;
+    }
 }
