@@ -119,7 +119,7 @@ public class UserController {
                 + "', '"
                 + user.getLastname()
                 + "', '"
-                + H.md5WithSalt(user.getPassword())
+                + H.md5WithSalt(user.getCreatedTime(), user.getPassword())
                 + "', '"
                 + user.getEmail()
                 + "', "
@@ -151,7 +151,13 @@ public class UserController {
     }
 
 
-    public static User deleteUser(User user) {
+    public static Boolean deleteUser(User user) {
+
+        Hashing H = new Hashing();
+
+        String token = user.getToken();
+        int id = user.getId();
+        String email = user.getEmail();
 
         String sql = "DELETE FROM user WHERE id =" + user.getId();
 
@@ -161,41 +167,57 @@ public class UserController {
             dbCon = new DatabaseController();
         }
 
-        dbCon.insert(sql);
-
-        return user;
+        System.out.println(token);
+        if (token.equals(H.sha5WithSalt(id, email)))
+        {
+            dbCon.insert(sql);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public static User login(User user) {
-
-        String sql = "SELECT * FROM user where email= \'" + user.getEmail() + "\' AND password = \'" + user.getPassword() + "\'";
-
-        Log.writeLog(UserController.class.getName(), user, "Login ", 0);
-
-        Hashing H = new Hashing();
-
-        String createtoken = user.getCreatedTime() + user.getEmail();
-
 
         if (dbCon == null) {
             dbCon = new DatabaseController();
         }
 
+        Hashing H = new Hashing();
+
+        String password = user.getPassword();
+
+        Log.writeLog(UserController.class.getName(), user, "Login ", 0);
+
+        String sql = "SELECT * FROM user where email= \'" + user.getEmail() + "\'";
+
         ResultSet rs = dbCon.query(sql);
 
         try {
-            while (rs.next()) {
+            // Get first object, since we only have one
+            if (rs.next()) {
                 user = new User(
                         rs.getInt("id"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("password"),
-                        rs.getString("email"));
+                        rs.getString("email"),
+                        rs.getLong("created_at"));
+            } else {
+                System.out.println("User cant be found");
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
 
-        return user;
+        if (user.getPassword().equals(H.md5WithSalt(user.getCreatedTime(), password))) {
+            String createdToken = H.sha5WithSalt(user.getId(), user.getEmail());
+            user.setToken(createdToken);
+            return user;
+        } else {
+            return null;
+        }
     }
 }

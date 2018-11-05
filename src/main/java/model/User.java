@@ -8,6 +8,7 @@ public class User {
   public String email;
   private String password;
   private long createdTime;
+  private String token;
 
   public User(int id, String firstname, String lastname, String password, String email) {
     this.id = id;
@@ -15,6 +16,30 @@ public class User {
     this.lastname = lastname;
     this.password = password;
     this.email = email;
+  }
+
+//  Konstuktør for login
+  public User(int id, String firstname, String lastname, String password, String email, long createdTime) {
+  this.id = id;
+  this.firstname = firstname;
+  this.lastname = lastname;
+  this.password = password;
+  this.email = email;
+  this.createdTime=createdTime;
+}
+
+  public User(int id, String email, String token) {
+    this.id = id;
+    this.email = email;
+    this.token = token;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
   public int getId() {

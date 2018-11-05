@@ -33,11 +33,15 @@ public class UserEndpoints {
         // Convert the user object to json in order to return the object
         String json = new Gson().toJson(user);
 
-        json = Encryption.encryptDecryptXOR(json);
+//        json = Encryption.encryptDecryptXOR(json);
 
-        // Return the user with the status code 200
-        // TODO: What should happen if something breaks down?
-        return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
+        // TODO: What should happen if something breaks down? Fixed
+        if (user != null) {
+            // Return a response with status 200 and JSON as type
+            return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
+        } else {
+            return Response.status(400).entity("Could not find user").build();
+        }
     }
 
     /**
@@ -57,7 +61,7 @@ public class UserEndpoints {
         // Transfer users to json in order to return it to the user
         String json = new Gson().toJson(users);
 
-//    json = Encryption.encryptDecryptXOR(json);
+//        json = Encryption.encryptDecryptXOR(json);
 
         // Return the users with the status code 200
         return Response.status(200).type(MediaType.APPLICATION_JSON).entity(json).build();
@@ -86,7 +90,7 @@ public class UserEndpoints {
         }
     }
 
-    // TODO: Make the system able to login users and assign them a token to use throughout the system.
+    // TODO: Make the system able to login users and assign them a token to use throughout the system. Fixed
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -97,7 +101,6 @@ public class UserEndpoints {
         User loginUser = UserController.login(loginUser1);
 
         String json = new Gson().toJson(loginUser);
-
 
 
         if (loginUser != null) {
@@ -112,19 +115,19 @@ public class UserEndpoints {
     }
 
     // TODO: Make the system able to delete users Fixed (skriv documneation samt i usercontroller)
-    @DELETE
-    @Path("/{idUser}")
+    @POST
+    @Path("/deleteUser")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("idUser") int idUser) {
+    public Response deleteUser(String body) {
 
-        User deletedUser = UserController.getUser(idUser);
+        User user = new Gson().fromJson(body, User.class);
 
-        UserController.deleteUser(deletedUser);
+        Boolean validate = UserController.deleteUser(user);
 
-        if (deletedUser != null) {
+        if (validate) {
             // Return a response with status 200 and JSON as type
 
-            String outPut = new Gson().toJson("The user with id " + deletedUser.getId() + " is deleted");
+            String outPut = new Gson().toJson("The user with id " + user.getId() + " is deleted");
             return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(outPut).build();
 
         } else {

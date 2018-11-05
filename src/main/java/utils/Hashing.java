@@ -11,10 +11,10 @@ public final class Hashing {
 
     // TODO: You should add a salt and make this secure Fixed
 
-    public String md5WithSalt(String string) {
+    public String md5WithSalt(Long createdTime, String string) {
 
 //     Nedenfor sætter jeg mit salt og password sammen. Salten består at et unix timestamp og en streng jeg selv har lavet
-        string = System.currentTimeMillis() + string + "HdasdBDioahsdbDoaw747428";
+        string = createdTime + string + "Hej123";
 
 //      Nedenfor hashes password samt mit salt
         return md5(string);
@@ -49,7 +49,18 @@ public final class Hashing {
         return null;
     }
 
-    // TODO: You should add a salt and make this secure (Uses MD5)
+    // TODO: You should add a salt and make this secure Fixed
+
+    public String sha5WithSalt(int id,String email) {
+
+//     Nedenfor sætter jeg mit salt og password sammen. Salten består at et unix timestamp og en streng jeg selv har lavet
+        String string = id + email + "Hej123";
+
+//      Nedenfor hashes password samt mit salt
+        return sha(string);
+    }
+
+
     public static String sha(String rawString) {
         try {
             // We load the hashing algoritm we wish to use.
