@@ -22,7 +22,7 @@ import utils.Encryption;
 public class ProductEndpoints {
 
     //  Her har jeg lavet et globalt variable for cache
-    ProductCache productCache = new ProductCache();
+    static ProductCache productCache = new ProductCache();
 
     /**
      * @param idProduct
@@ -52,7 +52,7 @@ public class ProductEndpoints {
     @Path("/")
     public Response getProducts() {
 
-        //TODO: EGEN TODO LAVE OM PÅ FORMULERINGEN
+        //Skrive egen kommentering
         // Call our controller-layer in order to get the order from the DB
         ArrayList<Product> products = productCache.getProducts(false);
 

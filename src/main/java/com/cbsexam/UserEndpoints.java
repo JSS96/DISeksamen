@@ -16,7 +16,8 @@ import utils.Log;
 @Path("user")
 public class UserEndpoints {
 
-    UserCache userCache = new UserCache();
+//    Opretter et objekt af userCache
+    static UserCache userCache = new UserCache();
 
     /**
      * @param idUser
