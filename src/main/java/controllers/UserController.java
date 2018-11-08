@@ -147,7 +147,39 @@ public class UserController {
 
         Log.writeLog(UserController.class.getName(), user, "Actually updating a user in DB", 0);
 
+
+
+//        UPDATE Customers
+//        SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+//        WHERE CustomerID = 1;
+
+
+        // Opretter et objekt af H
+        Hashing H = new Hashing();
+
+        int userID = dbCon.insert("UPDATE user SET (first_name, last_name, password, email) VALUES('"
+                + user.getFirstname()
+                + "', '"
+                + user.getLastname()
+                + "', '"
+                + H.md5WithSalt(user.getCreatedTime(), user.getPassword())
+                + "', '"
+                + user.getEmail()
+                + "', "
+                + user.getCreatedTime()
+                + ")WHERE id="+user.getId());
+
+        if (userID != 0) {
+            //Update the userid of the user before returning
+            user.setId(userID);
+        } else {
+            // Return null if user has not been inserted into database
+            return null;
+        }
+
+        // Return user
         return user;
+
     }
 
 
@@ -211,7 +243,6 @@ public class UserController {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-
         if (user.getPassword().equals(H.md5WithSalt(user.getCreatedTime(), password))) {
             String createdToken = H.sha5WithSalt(user.getId(), user.getEmail());
             user.setToken(createdToken);

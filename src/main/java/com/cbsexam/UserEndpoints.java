@@ -61,7 +61,7 @@ public class UserEndpoints {
         // Transfer users to json in order to return it to the user
         String json = new Gson().toJson(users);
 
-//        json = Encryption.encryptDecryptXOR(json);
+        json = Encryption.encryptDecryptXOR(json);
 
         // Return the users with the status code 200
         return Response.status(200).type(MediaType.APPLICATION_JSON).entity(json).build();
@@ -136,11 +136,11 @@ public class UserEndpoints {
 
     }
 
-    @PUT
-    @Path("/{idUser}")
-    @Consumes(MediaType.APPLICATION_JSON)
     // TODO: Make the system able to update users
-    public Response updateUser(String x) {
+    @POST
+    @Path("/updateUser/{idUser}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUser(@PathParam("idUser") int idUser, String body) {
 
         // Return a response with status 200 and JSON as type
         return Response.status(400).entity("Endpoint not implemented yet").build();

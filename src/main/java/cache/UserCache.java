@@ -28,7 +28,7 @@ public class UserCache {
         // If the list is empty we also check for new products
         if (forceUpdate
                 || ((this.created + this.ttl) >= (System.currentTimeMillis() / 1000L))
-                || this.users== null) {
+                || this.users == null) {
 
             // Get products from controller, since we wish to update.
             ArrayList<User> users = UserController.getUsers();
@@ -36,10 +36,10 @@ public class UserCache {
             // Set products for the instance and set created timestamp
             this.users = users;
             this.created = System.currentTimeMillis() / 1000L;
-        }
 
+            System.out.println("Cache bliver ikke brugt");
+        }
         // Return the documents
         return this.users;
     }
-
 }
