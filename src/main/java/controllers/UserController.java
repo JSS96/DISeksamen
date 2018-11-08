@@ -139,49 +139,37 @@ public class UserController {
     }
 
     // ikke færdig endnu
-    public static User updateUser(User user) {
+    public static Boolean updateUser(User user) {
 
         if (dbCon == null) {
             dbCon = new DatabaseController();
         }
 
-        Log.writeLog(UserController.class.getName(), user, "Actually updating a user in DB", 0);
+        String token = user.getToken();
+        int id = user.getId();
+        String email = user.getEmail();
 
-
-
-//        UPDATE Customers
-//        SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
-//        WHERE CustomerID = 1;
-
-
-        // Opretter et objekt af H
         Hashing H = new Hashing();
 
-        int userID = dbCon.insert("UPDATE user SET (first_name, last_name, password, email) VALUES('"
-                + user.getFirstname()
-                + "', '"
-                + user.getLastname()
-                + "', '"
-                + H.md5WithSalt(user.getCreatedTime(), user.getPassword())
-                + "', '"
-                + user.getEmail()
-                + "', "
-                + user.getCreatedTime()
-                + ")WHERE id="+user.getId());
+        Log.writeLog(UserController.class.getName(), user, "Actually updating a user in DB", 0);
 
-        if (userID != 0) {
-            //Update the userid of the user before returning
-            user.setId(userID);
-        } else {
-            // Return null if user has not been inserted into database
-            return null;
+        String updateSQL = "UPDATE user SET first_name= \'"+user.getFirstname()+
+                "\' ,last_name= \'"+user.getLastname()+"\', email= \'"+ user.getEmail() +
+                "\' ,password= \'"+H.md5WithSalt(user.getCreatedTime(),user.getPassword())+"\'WHERE id="+user.getId();
+
+        // Opretter et objekt af H
+
+        if (token.equals(H.sha5WithSalt(id, email)))
+        {
+            dbCon.insert(updateSQL);
+            return true;
+        }
+        else
+        {
+            return false;
         }
 
-        // Return user
-        return user;
-
     }
-
 
     public static Boolean deleteUser(User user) {
 
