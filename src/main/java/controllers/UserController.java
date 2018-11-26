@@ -138,59 +138,46 @@ public class UserController {
         return user;
     }
 
-    // ikke færdig endnu
-    public static Boolean updateUser(User user) {
+    public static Boolean deleteUser(User user) {
 
         if (dbCon == null) {
             dbCon = new DatabaseController();
         }
-
-        String token = user.getToken();
-        int id = user.getId();
-        String email = user.getEmail();
-
-        Hashing H = new Hashing();
-
-        Log.writeLog(UserController.class.getName(), user, "Actually updating a user in DB", 0);
-
-        String updateSQL = "UPDATE user SET first_name= \'"+user.getFirstname()+
-                "\' ,last_name= \'"+user.getLastname()+"\', email= \'"+ user.getEmail() +
-                "\' ,password= \'"+H.md5WithSalt(user.getCreatedTime(),user.getPassword())+"\'WHERE id="+user.getId();
-
-        // Opretter et objekt af H
-
-        if (token.equals(H.sha5WithSalt(id, email)))
-        {
-            dbCon.insert(updateSQL);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-
-    public static Boolean deleteUser(User user) {
-
-        Hashing H = new Hashing();
-
-        String token = user.getToken();
-        int id = user.getId();
-        String email = user.getEmail();
-
-        String sql = "DELETE FROM user WHERE id =" + user.getId();
 
         Log.writeLog(UserController.class.getName(), user, "Deleting a user ", 0);
 
-        if (dbCon == null) {
-            dbCon = new DatabaseController();
+        Hashing H = new Hashing();
+
+        String token = user.getToken();
+        User tokenUser = user;
+        tokenUser.setToken(null);
+
+        String sql = "SELECT * FROM user WHERE email = \'" + user.getEmail()+"\'";
+
+        ResultSet rs = dbCon.query(sql);
+
+        try {
+            // Get first object, since we only have one
+            if (rs.next()) {
+                tokenUser =
+                        new User(
+                                rs.getInt("id"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                rs.getString("password"),
+                                rs.getString("email"));
+                tokenUser.setToken(H.sha5WithSalt(tokenUser.getId(),tokenUser.getEmail(),tokenUser.getPassword()));
+            } else {
+                System.out.println("No user found");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
 
-        System.out.println(token);
-        if (token.equals(H.sha5WithSalt(id, email)))
+        if (token.equals(tokenUser.getToken()))
         {
-            dbCon.insert(sql);
+            String sqlDelete = "DELETE FROM user WHERE email = \'" + user.getEmail()+"\'";
+            dbCon.insert(sqlDelete);
             return true;
         }
         else
@@ -231,12 +218,66 @@ public class UserController {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+
         if (user.getPassword().equals(H.md5WithSalt(user.getCreatedTime(), password))) {
-            String createdToken = H.sha5WithSalt(user.getId(), user.getEmail());
+            String createdToken = H.sha5WithSalt(user.getId(), user.getEmail(),user.getPassword());
             user.setToken(createdToken);
             return user;
         } else {
             return null;
+        }
+    }
+
+
+    public static Boolean updateUser(User user) {
+
+        if (dbCon == null) {
+            dbCon = new DatabaseController();
+        }
+
+        Log.writeLog(UserController.class.getName(), user, "Deleting a user ", 0);
+
+        Hashing H = new Hashing();
+
+        String token = user.getToken();
+        User tokenUser = user;
+        tokenUser.setToken(null);
+
+        String sql = "SELECT * FROM user WHERE email = \'" + user.getEmail()+"\'";
+
+        ResultSet rs = dbCon.query(sql);
+
+        try {
+            // Get first object, since we only have one
+            if (rs.next()) {
+                tokenUser =
+                        new User(
+                                rs.getInt("id"),
+                                rs.getString("first_name"),
+                                rs.getString("last_name"),
+                                rs.getString("password"),
+                                rs.getString("email"),
+                                rs.getLong("created_at"));
+                tokenUser.setToken(H.sha5WithSalt(tokenUser.getId(),tokenUser.getEmail(),tokenUser.getPassword()));
+            } else {
+                System.out.println("No user found");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        if (token.equals(tokenUser.getToken()))
+        {
+            String updateSql = "UPDATE user SET first_name= \'" + user.getFirstname() + "\', " + "last_name= \'"
+                    + user.getLastname() + "\', " + "password= \'"
+                    + H.md5WithSalt(tokenUser.getCreatedTime(), user.getPassword()) + "\' "
+                    + "WHERE email= \'" + user.getEmail() + "\'";
+            dbCon.insert(updateSql);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

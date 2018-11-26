@@ -51,12 +51,12 @@ public final class Hashing {
 
     // TODO: You should add a salt and make this secure Fixed
 
-    public String sha5WithSalt(int id,String email) {
+    public String sha5WithSalt(int id,String email,String password) {
 
-//     Nedenfor sætter jeg mit salt og password sammen. Salten består at et unix timestamp og en streng jeg selv har lavet
-        String string = id + email + "Hej123";
+    // Nedenfor sætter jeg mit salt og password sammen. Salten består at et unix timestamp og en streng jeg selv har lavet
+        String string = id + email +password + "Hej123";
 
-//      Nedenfor hashes password samt mit salt
+    // Nedenfor hashes password samt mit salt
         return sha(string);
     }
 

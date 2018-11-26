@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 //TODO: Build this cache and use it. FIXED
 public class UserCache {
+
     // List of products
     private ArrayList<User> users;
 
@@ -17,6 +18,7 @@ public class UserCache {
     // Sets when the cache has been created
     private long created;
 
+    // Gets ttl
     public UserCache() {
         this.ttl = Config.getUserTtl();
     }
@@ -39,7 +41,7 @@ public class UserCache {
             this.users = users;
             this.created = System.currentTimeMillis() / 1000L;
 
-            System.out.println("Cache bliver ikke brugt");
+            System.out.println("Cache bliver brugt");
         }
         // Return the documents
         return this.users;

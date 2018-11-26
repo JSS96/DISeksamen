@@ -101,12 +101,11 @@ public class UserEndpoints {
 
         User loginUser = UserController.login(loginUser1);
 
-        String json = new Gson().toJson(loginUser);
-
 
         if (loginUser != null) {
             // Return a response with status 200 and JSON as type
 
+            String json = new Gson().toJson("Here is your token "+loginUser.getToken());
             return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(json).build();
 
         } else {
@@ -117,7 +116,7 @@ public class UserEndpoints {
 
     // TODO: Make the system able to delete users Fixed (skriv documneation samt i usercontroller)
     @POST
-    @Path("/deleteUser")
+    @Path("/delete")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteUser(String body) {
 
@@ -126,13 +125,11 @@ public class UserEndpoints {
         Boolean validate = UserController.deleteUser(user);
 
         if (validate) {
-            // Return a response with status 200 and JSON as type
-
-            String outPut = new Gson().toJson("The user with id " + user.getId() + " is deleted");
+            String outPut = new Gson().toJson("You have now deleted " + user.getEmail());
             return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(outPut).build();
 
         } else {
-            return Response.status(400).entity("Something went wrong").build();
+            return Response.status(400).entity("Something went wrong, maybe the tokens isn't right :)").build();
         }
 
     }
@@ -149,11 +146,11 @@ public class UserEndpoints {
 
         if (updateUser) {
             // Return a response with status 200 and JSON as type
-            String outPut = new Gson().toJson("The user with id " + user.getId() + " is now updated");
+            String outPut = new Gson().toJson("You have now updated " + user.getEmail());
             return Response.status(200).type(MediaType.APPLICATION_JSON_TYPE).entity(outPut).build();
 
         } else {
-            return Response.status(400).entity("Virker ikke").build();
+            return Response.status(400).entity("Something went wrong, maybe the tokens isn't right :)").build();
         }
     }
 }
