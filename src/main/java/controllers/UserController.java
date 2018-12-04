@@ -109,11 +109,13 @@ public class UserController {
         }
 
         // Insert the user in the DB
-        // TODO: Hash the user password before saving it. Fixed
+        // TODO: Hash the user password before saving it. Fixed 1
 
-        // Opretter et objekt af H
+        // Creates a object of Hashing class
         Hashing H = new Hashing();
 
+        // Hashes the user password with the method md5WithSalt, uses the created time password
+        // and a extra salt.
         int userID = dbCon.insert("INSERT INTO user(first_name, last_name, password, email, created_at) VALUES('"
                 + user.getFirstname()
                 + "', '"
@@ -138,24 +140,42 @@ public class UserController {
         return user;
     }
 
+    /**
+     * This method makes a user able to delete a user by email
+     * @param user takes a user with the params email and token to validate against the user in the database.
+     * The user in the databasen is found by a SQL query seltcing a user by a email
+     * if user is found and macthing tokens and email, the method wil delete the user.
+     * @return
+     */
     public static Boolean deleteUser(User user) {
 
+        // Checks if there is connection with database
         if (dbCon == null) {
             dbCon = new DatabaseController();
         }
 
+        // writes a log
         Log.writeLog(UserController.class.getName(), user, "Deleting a user ", 0);
 
+        // Creats a object of Hasing class
         Hashing H = new Hashing();
 
+        // gets the user token
         String token = user.getToken();
+
+        // creates a temp user from user
         User tokenUser = user;
+
+        // sets the token for the tokenuser to null
         tokenUser.setToken(null);
 
+        // SQL statement to Select all information from a user
         String sql = "SELECT * FROM user WHERE email = \'" + user.getEmail()+"\'";
 
+        // Makes the resultset to get the user
         ResultSet rs = dbCon.query(sql);
 
+        // try catch for getting the user information, from database.
         try {
             // Get first object, since we only have one
             if (rs.next()) {
@@ -166,6 +186,7 @@ public class UserController {
                                 rs.getString("last_name"),
                                 rs.getString("password"),
                                 rs.getString("email"));
+                // Makes the token, since the token is not saved in database
                 tokenUser.setToken(H.sha5WithSalt(tokenUser.getId(),tokenUser.getEmail(),tokenUser.getPassword()));
             } else {
                 System.out.println("No user found");
@@ -174,8 +195,9 @@ public class UserController {
             System.out.println(ex.getMessage());
         }
 
-        if (token.equals(tokenUser.getToken()))
-        {
+        // If the tokens matches then make SQL statement to delete the user from database
+        // and return true, else return false
+        if (token.equals(tokenUser.getToken())) {
             String sqlDelete = "DELETE FROM user WHERE email = \'" + user.getEmail()+"\'";
             dbCon.insert(sqlDelete);
             return true;
@@ -186,22 +208,36 @@ public class UserController {
         }
     }
 
+    /**
+     * The method makes a user able to login in, and receives a token.
+     * @param user takes a user with the params email and password to validate against the user in the database,
+     * the user in the databasen is found by a SQL query seltcing a user by a email
+     * if user is found and macthing, the method will retrun a token.
+     * @return
+     */
     public static User login(User user) {
 
+        // Checks if there is connection with database
         if (dbCon == null) {
             dbCon = new DatabaseController();
         }
 
+        // Creats a object of Hasing class
         Hashing H = new Hashing();
 
+        // Retrives the users password, for later valdiation
         String password = user.getPassword();
 
-        Log.writeLog(UserController.class.getName(), user, "Login ", 0);
+        // writes a log
+        Log.writeLog(UserController.class.getName(), user, "User Login", 0);
 
+        // SQL statement for selcting a user by email
         String sql = "SELECT * FROM user where email= \'" + user.getEmail() + "\'";
 
+        // Makes the resultset to get the user
         ResultSet rs = dbCon.query(sql);
 
+        // try catch for getting the user information, from database.
         try {
             // Get first object, since we only have one
             if (rs.next()) {
@@ -219,6 +255,8 @@ public class UserController {
             System.out.println(ex.getMessage());
         }
 
+        // validation of users password where it hashes the writen password from user and matches it with the hashed
+        // one in database, if this is true it returns the whole user with a token
         if (user.getPassword().equals(H.md5WithSalt(user.getCreatedTime(), password))) {
             String createdToken = H.sha5WithSalt(user.getId(), user.getEmail(),user.getPassword());
             user.setToken(createdToken);
@@ -228,25 +266,42 @@ public class UserController {
         }
     }
 
-
+    /**
+     * This method that makes the user able to update a user.
+     * @param user this param takes the users writen attributes firstname, lastname, password, email and token
+     * if the email and token matches the one in database, then make SQL statement to update user with the new attributes,
+     * this also gives him a new token. as it is based on password.
+     * @return
+     */
     public static Boolean updateUser(User user) {
 
+        // Checks if there is connection with database
         if (dbCon == null) {
             dbCon = new DatabaseController();
         }
 
+        // writes log in console
         Log.writeLog(UserController.class.getName(), user, "Deleting a user ", 0);
 
+        // Creats a object of Hasing class
         Hashing H = new Hashing();
 
+        // gets the user token
         String token = user.getToken();
+
+        // creates a temp user from user
         User tokenUser = user;
+
+        // sets the token for the tokenuser to null
         tokenUser.setToken(null);
 
+        // SQL statement to Select all information from a user
         String sql = "SELECT * FROM user WHERE email = \'" + user.getEmail()+"\'";
 
+        // Makes the resultset to get the user
         ResultSet rs = dbCon.query(sql);
 
+        // try catch for getting the user information, from database.
         try {
             // Get first object, since we only have one
             if (rs.next()) {
@@ -258,6 +313,7 @@ public class UserController {
                                 rs.getString("password"),
                                 rs.getString("email"),
                                 rs.getLong("created_at"));
+                // sets the token for the temp user
                 tokenUser.setToken(H.sha5WithSalt(tokenUser.getId(),tokenUser.getEmail(),tokenUser.getPassword()));
             } else {
                 System.out.println("No user found");
@@ -266,8 +322,8 @@ public class UserController {
             System.out.println(ex.getMessage());
         }
 
-        if (token.equals(tokenUser.getToken()))
-        {
+        // If the tokens matches update the user,return true, and make a update sql statement, else return false
+        if (token.equals(tokenUser.getToken())) {
             String updateSql = "UPDATE user SET first_name= \'" + user.getFirstname() + "\', " + "last_name= \'"
                     + user.getLastname() + "\', " + "password= \'"
                     + H.md5WithSalt(tokenUser.getCreatedTime(), user.getPassword()) + "\' "
@@ -275,8 +331,7 @@ public class UserController {
             dbCon.insert(updateSql);
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }

@@ -35,10 +35,11 @@ public class ProductEndpoints {
         // Call our controller-layer in order to get the order from the DB
         Product product = ProductController.getProduct(idProduct);
 
-        // TODO: Add Encryption to JSON Fixed
+        // TODO: Add Encryption to JSON Fixed 1
         // We convert the java object to json with GSON library imported in Maven
         String json = new Gson().toJson(product);
 
+        // Here the JSON object gets encrypted
         json = Encryption.encryptDecryptXOR(json);
 
         // Return a response with status 200 and JSON as type
@@ -56,10 +57,11 @@ public class ProductEndpoints {
         // Call our controller-layer in order to get the order from the DB
         ArrayList<Product> products = productCache.getProducts(false);
 
-        // TODO: Add Encryption to JSON Fixed
+        // TODO: Add Encryption to JSON Fixed 1
         // We convert the java object to json with GSON library imported in Maven
         String json = new Gson().toJson(products);
 
+        // Here the JSON object gets encrypted
         json = Encryption.encryptDecryptXOR(json);
 
         // Return a response with status 200 and JSON as type
