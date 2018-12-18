@@ -20,11 +20,10 @@ public class ReviewEndpoints {
   @GET
   @Path("/title/{title}")
   public Response search(@PathParam("title") String reviewTitle) {
-
     // Call our controller-layer in order to get the order from the DB
     ArrayList<Review> reviews = ReviewController.searchByTitle(reviewTitle);
 
-    // TODO: Add Encryption to JSON Fixed 1
+    // TODO: Add Encryption to JSON FIXED
     // We convert the java object to json with GSON library imported in Maven
     String json = new Gson().toJson(reviews);
 

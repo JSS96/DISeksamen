@@ -31,14 +31,14 @@ public class UserEndpoints {
         // Use the ID to get the user from the controller.
         User user = UserController.getUser(idUser);
 
-        // TODO: Add Encryption to JSON Fixed 1
+        // TODO: Add Encryption to JSON FIXED
         // Convert the user object to json in order to return the object
         String json = new Gson().toJson(user);
 
         // Here the JSON object gets encrypted
         json = Encryption.encryptDecryptXOR(json);
 
-        // TODO: What should happen if something breaks down? Fixed 1
+        // TODO: What should happen if something breaks down? FIXED
 
         // Here if it gets the user successfully return the JSON object and status code 200(is not null)
         // else return code 400 and and a custom text
@@ -63,7 +63,7 @@ public class UserEndpoints {
         // Get a list of users
         ArrayList<User> users = userCache.getUsers(false);
 
-        // TODO: Add Encryption to JSON Fixed 1
+        // TODO: Add Encryption to JSON FIXED
         // Transfer users to json in order to return it to the user
         String json = new Gson().toJson(users);
 
@@ -97,7 +97,7 @@ public class UserEndpoints {
         }
     }
 
-    // TODO: Make the system able to login users and assign them a token to use throughout the system. Fixed 1
+    // TODO: Make the system able to login users and assign them a token to use throughout the system. FIXED
     /**
      * This is a endpoint which uses the path user/login, to make a user able to login, and create a token
      * @param body takes a email and password, if thats true make a token, and return that
@@ -125,7 +125,7 @@ public class UserEndpoints {
         }
     }
 
-    // TODO: Make the system able to delete users Fixed 1
+    // TODO: Make the system able to delete users FIXED
     /**
      * This is a endpoint which uses the path user/delete to delete a user, to delete a user you need type in an email
      * and the token received when loging in.
@@ -153,7 +153,7 @@ public class UserEndpoints {
         }
     }
 
-    // TODO: Make the system able to update users FIXED 1
+    // TODO: Make the system able to update users FIXED
 
     /**
      * This is a endpoint which uses the path user/update to update a user, to update a user you need type in an email

@@ -188,7 +188,6 @@ public class OrderController {
             // Catch exceptions
         } catch (SQLException e) {
             e.printStackTrace();
-            // TODO: LAV DET HER
             if (dbconTransaction != null){
                 try{
                     System.err.print("Transaction is being rolled back");
@@ -197,7 +196,6 @@ public class OrderController {
                     e2.printStackTrace();
                 }
             }
-
         }
 
         // after try catch always set autocommit to true

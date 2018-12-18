@@ -9,7 +9,7 @@ import org.bouncycastle.util.encoders.Hex;
 
 public final class Hashing {
 
-    // TODO: You should add a salt and make this secure Fixed
+    // TODO: You should add a salt and make this secure FIXED
 
     public String md5WithSalt(Long createdTime, String string) {
 
@@ -49,7 +49,7 @@ public final class Hashing {
         return null;
     }
 
-    // TODO: You should add a salt and make this secure Fixed
+    // TODO: You should add a salt and make this secure FIXED
 
     public String sha5WithSalt(int id,String email,String password) {
 

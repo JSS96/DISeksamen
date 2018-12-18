@@ -109,7 +109,7 @@ public class UserController {
         }
 
         // Insert the user in the DB
-        // TODO: Hash the user password before saving it. Fixed 1
+        // TODO: Hash the user password before saving it. FIXED
 
         // Creates a object of Hashing class
         Hashing H = new Hashing();
