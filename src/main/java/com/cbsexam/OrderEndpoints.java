@@ -29,7 +29,7 @@ public class OrderEndpoints {
     @Path("/{idOrder}")
     public Response getOrder(@PathParam("idOrder") int idOrder) {
 
-        // Call our controller-layer in order to get the order from the DB
+        // Call our controller-layer in order to get the order from the DB.
         Order order = OrderController.getOrder(idOrder);
 
         // TODO: Add Encryption to JSON FIXED
