@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import cache.UserCache;
 import model.User;
 import utils.Hashing;
 import utils.Log;
