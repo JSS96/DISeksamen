@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import cache.UserCache;
 import model.User;
 import utils.Hashing;
 import utils.Log;
@@ -135,7 +136,6 @@ public class UserController {
             // Return null if user has not been inserted into database
             return null;
         }
-
         // Return user
         return user;
     }
